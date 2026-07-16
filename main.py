@@ -305,7 +305,7 @@ def generate_pdf(img: str, original: str, date_posted: str, session_id: str, evi
 
     return pdf_bytes
 
-@app.get("/ask")
+@app.get("/")
 @limiter.limit("5/minute")
 def get_form(request:Request):
     return templates.TemplateResponse(
@@ -316,7 +316,7 @@ def get_form(request:Request):
     
 
 
-@app.post("/ask")
+@app.post("/")
 @limiter.limit("5/minute")
 async def handle_form(
         request:Request,
