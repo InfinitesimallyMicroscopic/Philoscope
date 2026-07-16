@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block main %}
+    <div class="container">
+
+        <div class="image_title">
+        <div class="titles  ">
+            <div class="first_two text-center" >
+            <img style="width: 30%; height: 30%; margin-top: -22px;" src="/media/realshii.png" class="img-fluid " alt="">
+            <div class="   fw-bold font-monospace gradient-text-top" style="font-size: 6.5rem;display: block;margin-top: -100px;">Philoscope.</div>
+            </div>
+            <div class="display-6 mb-3 text-center" >PHILOSOPHY AND AI</div>
+        </div>
+        </div>
+        <!-- smth -->
+
+        <div class="question_box">
+            <form action="/ask" method="post" id="myForm">
+                <div class="question_container d-flex flex-column px-4">
+                   
+                    <div class="d-flex justify-content-center align-items-center my-2">
+                            <textarea class="question form-control w-85" rows="3" name="question" placeholder="Paste Your Text Here 📘" id="questionInput"></textarea>
+                    </div>
+
+                    <button id="submitBtn" class="btn btn-neon mt-2" type="submit">
+                        <span style="font-family: 'Roboto', sans-serif;" class="fw-light" id="btnText">Generate Report</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 8H15M15 8L8 1M15 8L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                    </button>
+                    <div class="subtext mt-4">
+                        <span class="" style="font-family: 'Merriweather', Georgia, serif;">Analyze philosophical texts through AI-powered thematic, ethical, and ideological interpretation.</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="responseArea" class="mt-4"></div>
+
+    
+
+    </div>
+{% endblock %}
