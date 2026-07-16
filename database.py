@@ -7,11 +7,16 @@ import os
 from pathlib import Path
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
-#use env variable
-SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL')
 
-if SQLALCHEMY_DATABASE_URL is None:
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not SQLALCHEMY_DATABASE_URL:
     raise RuntimeError("DATABASE_URL is not set")
+
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+elif SQLALCHEMY_DATABASE_URL.startswith("postgresql://") and not SQLALCHEMY_DATABASE_URL.startswith("postgresql+asyncpg://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL,
 )
