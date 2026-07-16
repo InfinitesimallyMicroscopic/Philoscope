@@ -148,7 +148,10 @@ def generate_chart(question_data: dict):
         ),
         xaxis=dict(
                 range=[-100, 100],
-                zeroline=False
+                showticklabels=False,  # Ẩn hoàn toàn các con số (labels)
+                showgrid=False,        # Ẩn các đường lưới dọc (nếu muốn biểu đồ tối giản)
+                zeroline=True,         # Giữ lại vạch đen ở giữa (trục 0)
+                zerolinecolor='black' # Tô đậm vạch trục 0 để làm mốc đối xứng
             ),
         xaxis_title="Score",
         yaxis_title="Category",
