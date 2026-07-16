@@ -74,7 +74,16 @@ load_dotenv()
 
 
 client = genai.Client()
-
+safe_config = types.GenerateContentConfig(
+ 
+    max_output_tokens=500,
+    
+    # Nhiệt độ (Độ sáng tạo): từ 0.0 (chính xác, nhất quán) đến 2.0 (sáng tạo, ngẫu nhiên)
+    # Giữ ở mức thấp (0.2 - 0.7) để AI trả lời đúng trọng tâm, tránh lan man tốn token
+    temperature=0.3,
+    
+  
+)
 
 prompt = """
 "Analyze the following philosophical essay. Evaluate where the author stands "
