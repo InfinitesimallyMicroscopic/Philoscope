@@ -376,8 +376,7 @@ async def handle_form(
         config = types.GenerateContentConfig(
         response_mime_type="application/json",
         response_schema=CompassResponse,
-        max_output_tokens=500,
-        temperature=0.3,
+        temperature=0.1,
     
    
     )
@@ -388,7 +387,7 @@ async def handle_form(
             status_code=503,
             detail='The AI service is temporarily unavailable'
         )
-   
+    print(response_ai.text)
     if response_ai.text is None:
         raise HTTPException (
             status_code=500, detail = "Failed to parse"
@@ -421,8 +420,6 @@ async def handle_form(
 
     graph_data, graph_layout, img_plot = await run_in_threadpool(generate_chart, question_data)
     
-    if isinstance(response_ai.text, dict):
-        pdf_bytes = await run_in_threadpool(generate_pdf, img_plot, new_question.content, str(new_question.date_posted), str(session_id), response_ai.text)
    
     return JSONResponse({   
             "json_qdata": json_qdata,
@@ -524,7 +521,6 @@ async def general_http_exception_handler(request: Request, exception: StarletteH
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_error(request:Request, exception: Exception):
     logger.exception(exception)
-    print(exception.detail)
     if request.url.path.startswith("/") or request.url.path.startswith("/download"):
         
         return templates.TemplateResponse(
@@ -545,28 +541,28 @@ async def rate_limit_error(request:Request, exception: Exception):
         }
     )
 
-# @app.exception_handler(Exception)
-# async def general_exception_handler(request: Request, exception: Exception):
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exception: Exception):
     
-#     logger.exception(exception)
-#     if request.url.path.startswith("/") or request.url.path.startswith("/download"):
+    logger.exception(exception)
+    if request.url.path.startswith("/") or request.url.path.startswith("/download"):
         
-#         return templates.TemplateResponse(
-#             request,
-#             "error.html",
-#             {
-#                 "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-#                 "title": "INTERNAL SERVER ERROR",
-#                 "message": "Internal Server Error. We're very sorry",
-#             },
-#             status_code=500,
-#         )
-#     return JSONResponse(
-#         status_code=500,
-#         content={
-#             "detail": "Internal server error"
-#         }
-#     )
+        return templates.TemplateResponse(
+            request,
+            "error.html",
+            {
+                "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "title": "INTERNAL SERVER ERROR",
+                "message": "Internal Server Error. We're very sorry",
+            },
+            status_code=500,
+        )
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "Internal server error"
+        }
+    )
 
 ### RequestValidationError Handler
 @app.exception_handler(RequestValidationError)
@@ -584,7 +580,6 @@ async def validation_exception_handler(request: Request, exception: RequestValid
         },
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
     )
-
 
 
 
