@@ -487,6 +487,10 @@ async def download(
 
 
 
+
+
+
+
 @app.exception_handler(StarletteHTTPException)
 async def general_http_exception_handler(request: Request, exception: StarletteHTTPException):
     
@@ -498,27 +502,40 @@ async def general_http_exception_handler(request: Request, exception: StarletteH
     )
 
     if request.url.path.startswith("/") or request.url.path.startswith("/download"):
-        return JSONResponse(
+        
+        return templates.TemplateResponse(
+            request,
+            "error.html",
+            {
+                "status_code": exception.status_code,
+                "title": exception.status_code,
+                "message": message,
+            },
+            status_code=exception.status_code,
+        )
+    return JSONResponse(
             status_code=exception.status_code,
             content={
                 "detail": exception.detail
             }
         )
-    return templates.TemplateResponse(
-        request,
-        "error.html",
-        {
-            "status_code": exception.status_code,
-            "title": exception.status_code,
-            "message": message,
-        },
-        status_code=exception.status_code,
-    )
 
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_error(request:Request, exception: Exception):
-    
     logger.exception(exception)
+    if request.url.path.startswith("/") or request.url.path.startswith("/download"):
+        
+        return templates.TemplateResponse(
+            request,
+            "error.html",
+            {
+                "status_code": status.HTTP_429_TOO_MANY_REQUESTS,
+                "title": "TOO MANY REQUESTS",
+                "message": "You are moving a bit too fast for our servers to keep up.",
+            },
+            status_code=429,
+        )
+       
     return JSONResponse(
         status_code=429,
         content={
@@ -529,6 +546,18 @@ async def rate_limit_error(request:Request, exception: Exception):
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exception: Exception):
     logger.exception(exception)
+    if request.url.path.startswith("/") or request.url.path.startswith("/download"):
+        
+        return templates.TemplateResponse(
+            request,
+            "error.html",
+            {
+                "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "title": "INTERNAL SERVER ERROR",
+                "message": "Internal Server Error. We're very sorry",
+            },
+            status_code=500,
+        )
     return JSONResponse(
         status_code=500,
         content={
