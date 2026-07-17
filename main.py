@@ -494,7 +494,8 @@ async def download(
 @app.exception_handler(StarletteHTTPException)
 async def general_http_exception_handler(request: Request, exception: StarletteHTTPException):
     
-    logger.exception(exception)    
+    logger.exception(exception) 
+    print(exception.detail)
     message = (
         exception.detail
         if exception.detail
@@ -523,6 +524,7 @@ async def general_http_exception_handler(request: Request, exception: StarletteH
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_error(request:Request, exception: Exception):
     logger.exception(exception)
+    print(exception.detail)
     if request.url.path.startswith("/") or request.url.path.startswith("/download"):
         
         return templates.TemplateResponse(
@@ -543,27 +545,28 @@ async def rate_limit_error(request:Request, exception: Exception):
         }
     )
 
-@app.exception_handler(Exception)
-async def general_exception_handler(request: Request, exception: Exception):
-    logger.exception(exception)
-    if request.url.path.startswith("/") or request.url.path.startswith("/download"):
+# @app.exception_handler(Exception)
+# async def general_exception_handler(request: Request, exception: Exception):
+    
+#     logger.exception(exception)
+#     if request.url.path.startswith("/") or request.url.path.startswith("/download"):
         
-        return templates.TemplateResponse(
-            request,
-            "error.html",
-            {
-                "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                "title": "INTERNAL SERVER ERROR",
-                "message": "Internal Server Error. We're very sorry",
-            },
-            status_code=500,
-        )
-    return JSONResponse(
-        status_code=500,
-        content={
-            "detail": "Internal server error"
-        }
-    )
+#         return templates.TemplateResponse(
+#             request,
+#             "error.html",
+#             {
+#                 "status_code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                 "title": "INTERNAL SERVER ERROR",
+#                 "message": "Internal Server Error. We're very sorry",
+#             },
+#             status_code=500,
+#         )
+#     return JSONResponse(
+#         status_code=500,
+#         content={
+#             "detail": "Internal server error"
+#         }
+#     )
 
 ### RequestValidationError Handler
 @app.exception_handler(RequestValidationError)
