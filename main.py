@@ -83,8 +83,8 @@ prompt = """
 """
 def generate_chart(question_data: dict):
     data_container = {  
-        "left_var": ['👈individualism', '👈rationalism', '👈universalism', '👈determinism'],
-        "right_var": ['collectivism👉', 'irrationalism👉', 'relativism👉', 'free will👉'],
+        "left_var": ['<-individualism', '<-rationalism', '<-universalism', '<-determinism'],
+        "right_var": ['collectivism->', 'irrationalism->', 'relativism->', 'free will->'],
         "right_scores": [],
         "left_scores": [],
         'label_list': [],
@@ -107,7 +107,7 @@ def generate_chart(question_data: dict):
     combined_var = zip(df['left_var'],df['right_var'])
 
 
-    df['combined']=[f'{left} ⚖️ {right}' for left, right in combined_var]
+    df['combined']=[f'{left} | {right}' for left, right in combined_var]
 
     fig.add_trace(go.Bar(
         y=df["combined"],
