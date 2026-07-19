@@ -82,9 +82,9 @@ prompt = """
         "a descriptive label, and the textual evidence/reasoning behind your decision. left_score is the score of the FIRST ideology in the field name.right_score is the score of the SECOND ideology. Both scores must be integers between 0 and 100. left_score + right_score must equal exactly 100."
 """
 def generate_chart(question_data: dict):
-    data_container = {
-        "left_var": ['individualism', 'rationalism', 'universalism', 'determinism'],
-        "right_var": ['collectivism', 'irrationalism', 'relativism', 'free will'],
+    data_container = {  
+        "left_var": ['👈individualism', '👈rationalism', '👈universalism', '👈determinism'],
+        "right_var": ['collectivism👉', 'irrationalism👉', 'relativism👉', 'free will👉'],
         "right_scores": [],
         "left_scores": [],
         'label_list': [],
@@ -107,7 +107,7 @@ def generate_chart(question_data: dict):
     combined_var = zip(df['left_var'],df['right_var'])
 
 
-    df['combined']=[f'{left} - {right}' for left, right in combined_var]
+    df['combined']=[f'{left} ⚖️ {right}' for left, right in combined_var]
 
     fig.add_trace(go.Bar(
         y=df["combined"],
